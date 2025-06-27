@@ -214,7 +214,7 @@ export class LoginPage implements OnInit {
 
   // For testing with mock auth
   async signInWithMockAuth() {
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    //if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
       const modal = await this.modalController.create({
         component: MockAuthModalComponent,
         cssClass: 'mock-auth-modal'
@@ -228,7 +228,7 @@ export class LoginPage implements OnInit {
         // Use the username from the modal for the mock token
         await this.handleGoogleToken(`mock-${data.username}-token`);
       }
-    }
+    //}
   }
 
   // Helper method to check if running on localhost
