@@ -1,0 +1,343 @@
+.pr-container {
+  margin-top: 20px;
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.review-info {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.reviewers {
+  margin-top: 10px;
+}
+
+.summary-card {
+  margin-top: 20px;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  border: 2px solid rgba(102, 126, 234, 0.3);
+  
+  ion-card-title {
+    background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+ion-card {
+  margin-bottom: 16px;
+  animation: slideUp 0.4s ease-out;
+  animation-fill-mode: both;
+  
+  @for $i from 1 through 10 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.1}s;
+    }
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+ion-item {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  --background: transparent;
+  border-left: 3px solid transparent;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    border-left-color: var(--ion-color-primary);
+    background: rgba(255, 255, 255, 0.02);
+  }
+}
+
+ion-chip {
+  height: 24px;
+  font-size: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.pr-number-link {
+  color: #4c8dff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    text-decoration: underline;
+    text-shadow: 0 0 8px rgba(76, 141, 255, 0.5);
+  }
+}
+
+.developer-nav {
+  margin: 20px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 15px;
+  background: linear-gradient(135deg, rgba(30, 60, 114, 0.2) 0%, rgba(42, 82, 152, 0.2) 100%);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: slideDown 0.5s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.developer-chip {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+  border: 1px solid rgba(102, 126, 234, 0.3);
+  backdrop-filter: blur(5px);
+  
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    border-color: rgba(102, 126, 234, 0.6);
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+  
+  ion-label {
+    font-weight: 500;
+  }
+}
+
+/* Loading state animation */
+ion-button[disabled] {
+  opacity: 0.6;
+  
+  ion-icon {
+    animation: spin 2s linear infinite;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Gradient for PR counts */
+ion-card-subtitle {
+  background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 500;
+}
+
+/* Comment count badges with glow */
+.review-info {
+  ion-chip {
+    &[color="success"] {
+      animation: pulseGreen 2s infinite;
+    }
+    
+    &[color="warning"] {
+      animation: pulseYellow 2s infinite;
+    }
+  }
+}
+
+@keyframes pulseGreen {
+  0% {
+    box-shadow: 0 0 5px rgba(45, 211, 111, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(45, 211, 111, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(45, 211, 111, 0.5);
+  }
+}
+
+@keyframes pulseYellow {
+  0% {
+    box-shadow: 0 0 5px rgba(255, 196, 9, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 196, 9, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(255, 196, 9, 0.5);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .developer-nav {
+    padding: 10px;
+    gap: 8px;
+  }
+  
+  ion-card {
+    margin-bottom: 12px;
+  }
+}
+
+/* Enhanced text readability in dark mode */
+ion-text[color="medium"] {
+  color: rgba(255, 255, 255, 0.7) !important;
+  
+  strong {
+    color: #4c8dff;
+    font-weight: 600;
+  }
+}
+
+h2 {
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 500;
+}
+
+/* Group buttons container */
+.group-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: linear-gradient(135deg, rgba(30, 60, 114, 0.1) 0%, rgba(42, 82, 152, 0.1) 100%);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: fadeIn 0.5s ease-in;
+  
+  ion-button {
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    transition: all 0.3s ease;
+    
+    &[fill="solid"] {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      box-shadow: 0 4px 15px 0 rgba(118, 75, 162, 0.4);
+    }
+    
+    &[fill="outline"] {
+      --border-width: 2px;
+      --border-color: rgba(102, 126, 234, 0.4);
+      
+      &:hover {
+        --border-color: rgba(102, 126, 234, 0.8);
+        transform: scale(1.05);
+      }
+    }
+    
+    ion-icon {
+      margin-right: 5px;
+    }
+  }
+}
+
+/* Responsive adjustments for group buttons */
+@media (max-width: 576px) {
+  .group-buttons {
+    padding: 10px;
+    gap: 8px;
+    
+    ion-button {
+      font-size: 14px;
+      --padding-start: 12px;
+      --padding-end: 12px;
+    }
+  }
+}
+
+/* Progress indicator */
+.fetch-progress {
+  margin: 20px 0;
+  animation: fadeIn 0.3s ease-in;
+  
+  ion-card {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border: 2px solid rgba(102, 126, 234, 0.3);
+  }
+  
+  .progress-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    
+    ion-icon {
+      font-size: 24px;
+      color: var(--ion-color-primary);
+    }
+    
+    span {
+      font-size: 16px;
+      
+      strong {
+        color: var(--ion-color-primary);
+        font-weight: 600;
+      }
+    }
+  }
+  
+  ion-progress-bar {
+    height: 8px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  
+  .progress-text {
+    margin: 0;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+  }
+}
+
+/* Spinning animation for sync icon */
+.spinning {
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

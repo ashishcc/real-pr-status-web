@@ -1,0 +1,156 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      GitHub PR Tracker
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleUserMenu($event)">
+        <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  
+  <!-- User Menu Popover -->
+  <ion-popover #userMenu trigger="user-menu-trigger" [dismissOnSelect]="true">
+    <ng-template>
+      <ion-content>
+        <ion-list>
+          <ion-item lines="none">
+            <ion-avatar slot="start">
+              <ion-icon name="person-circle-outline" style="font-size: 40px;"></ion-icon>
+            </ion-avatar>
+            <ion-label>
+              <h2>{{ currentUser?.username }}</h2>
+              <p>{{ currentUser?.email }}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item button (click)="logout()">
+            <ion-icon name="log-out-outline" slot="start"></ion-icon>
+            <ion-label>Sign Out</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-popover>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">GitHub PR Tracker</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="ion-padding">
+    <!-- Group Buttons -->
+    <div class="group-buttons">
+      <ion-button *ngFor="let group of groups | keyvalue" 
+                  (click)="fetchPullRequestsByGroup(group.key)"
+                  [color]="selectedGroup === group.key ? 'primary' : 'medium'"
+                  [fill]="selectedGroup === group.key ? 'solid' : 'outline'"
+                  [disabled]="loading">
+        <ion-icon slot="start" name="folder-outline"></ion-icon>
+        {{ group.key | titlecase }}
+      </ion-button>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div *ngIf="loading && currentlyFetchingDeveloper" class="fetch-progress">
+      <ion-card>
+        <ion-card-content>
+          <div class="progress-info">
+            <ion-icon name="sync-outline" class="spinning"></ion-icon>
+            <span>Fetching PRs for: <strong>{{ currentlyFetchingDeveloper }}</strong></span>
+          </div>
+          <ion-progress-bar 
+            [value]="fetchProgress.total > 0 ? fetchProgress.completed / fetchProgress.total : 0"
+            color="primary">
+          </ion-progress-bar>
+          <p class="progress-text">
+            Progress: {{ fetchProgress.completed }} / {{ fetchProgress.total }} developers
+          </p>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Developer Navigation -->
+    <div *ngIf="prData && prData.developers.length > 0" class="developer-nav">
+      <ion-chip *ngFor="let developer of prData.developers" 
+                (click)="scrollToDeveloper(developer.username)"
+                class="developer-chip">
+        <ion-icon name="person-circle-outline" slot="start"></ion-icon>
+        <ion-label>{{ developer.username }} ({{ developer.pull_requests.length }})</ion-label>
+      </ion-chip>
+    </div>
+
+    <div *ngIf="prData" class="pr-container">
+      <ion-card *ngFor="let developer of prData.developers" [id]="'developer-' + developer.username">
+        <ion-card-header>
+          <ion-card-title>
+            <ion-icon name="git-pull-request-outline" style="margin-right: 8px; vertical-align: middle;"></ion-icon>
+            {{ developer.username }}
+          </ion-card-title>
+          <ion-card-subtitle>{{ developer.pull_requests.length }} open PRs</ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content>
+          <ion-list *ngIf="developer.pull_requests.length > 0">
+            <ion-item *ngFor="let pr of developer.pull_requests" lines="full">
+              <ion-label class="ion-text-wrap">
+                <h2>{{ pr.title }}</h2>
+                <p>
+                  <ion-icon name="git-branch-outline" style="vertical-align: middle; margin-right: 4px;"></ion-icon>
+                  <ion-text color="medium">{{ pr.repository }} 
+                    <a [href]="pr.url" target="_blank" class="pr-number-link">#{{ pr.number }}</a>
+                  </ion-text>
+                </p>
+                <p>
+                  <ion-icon name="time-outline" style="vertical-align: middle; margin-right: 4px;"></ion-icon>
+                  <ion-text color="medium">Created {{ getTimeSince(pr.created_at) }}</ion-text>
+                  <span *ngIf="pr.last_comment_date">
+                    <ion-text color="medium"> • Last commented 
+                      <span *ngIf="pr.last_comment_by">by <strong>{{ pr.last_comment_by }}</strong> </span>
+                      {{ getTimeSince(pr.last_comment_date) }}
+                    </ion-text>
+                  </span>
+                </p>
+                <div class="review-info">
+                  <ion-chip color="primary" outline="true">
+                    <ion-label>{{ pr.review_comments.total }} comments</ion-label>
+                  </ion-chip>
+                  <ion-chip color="success" outline="true" *ngIf="pr.review_comments.resolved > 0">
+                    <ion-label>{{ pr.review_comments.resolved }} resolved</ion-label>
+                  </ion-chip>
+                  <ion-chip color="warning" outline="true" *ngIf="pr.review_comments.unresolved > 0">
+                    <ion-label>{{ pr.review_comments.unresolved }} unresolved</ion-label>
+                  </ion-chip>
+                </div>
+                <p *ngIf="pr.reviewers.length > 0" class="reviewers">
+                  <ion-icon name="people-outline" style="vertical-align: middle; margin-right: 4px;"></ion-icon>
+                  <ion-text color="medium">Reviewers: {{ pr.reviewers.join(', ') }}</ion-text>
+                </p>
+              </ion-label>
+              <ion-button slot="end" fill="clear" [href]="pr.url" target="_blank">
+                <ion-icon slot="icon-only" name="open-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </ion-list>
+          <ion-text color="medium" *ngIf="developer.pull_requests.length === 0">
+            <p class="ion-text-center">No open pull requests</p>
+          </ion-text>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="summary-card">
+        <ion-card-header>
+          <ion-card-title>Summary</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <p>Total open PRs: {{ getTotalPRCount() }}</p>
+          <p>Fetched at: {{ formatDate(prData.fetched_at) }}</p>
+          <p>API rate limit remaining: {{ prData.rate_limit_remaining }}</p>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+</ion-content>

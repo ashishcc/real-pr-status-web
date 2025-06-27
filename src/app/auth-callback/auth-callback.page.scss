@@ -1,0 +1,20 @@
+.callback-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0a0e27 0%, #1a1a2e 100%);
+  
+  ion-spinner {
+    --color: #667eea;
+    width: 50px;
+    height: 50px;
+    margin-bottom: 20px;
+  }
+  
+  p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 16px;
+  }
+}

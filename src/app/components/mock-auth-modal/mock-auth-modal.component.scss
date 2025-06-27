@@ -1,0 +1,35 @@
+.mock-auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+  padding: 20px;
+}
+
+ion-card {
+  max-width: 400px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+ion-card-header {
+  text-align: center;
+}
+
+ion-card-content {
+  padding-top: 20px;
+}
+
+ion-item {
+  margin-bottom: 15px;
+}
+
+.error-message {
+  text-align: center;
+  font-size: 14px;
+  margin: 10px 0;
+}
+
+.login-button {
+  margin-top: 20px;
+}
