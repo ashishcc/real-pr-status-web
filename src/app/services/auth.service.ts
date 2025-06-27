@@ -17,11 +17,6 @@ export interface AuthResponse {
   user_info: UserInfo;
 }
 
-export interface GoogleSSOInfo {
-  googleSsoEnabled: boolean;
-  forceGoogleSso: boolean;
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -47,15 +42,11 @@ export class AuthService {
     return !!this.getToken();
   }
   
-  checkGoogleSSO(email: string): Observable<GoogleSSOInfo> {
-    return this.http.get<GoogleSSOInfo>(`${this.apiUrl}/api/auth/check-google-sso`, {
-      params: { email }
-    });
-  }
-  
-  googleLogin(accessToken: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/api/auth/google`, {
-      access_token: accessToken
+  loginWithCredentials(username: string): Observable<AuthResponse> {
+    // Simple login with hardcoded credentials (already validated in component)
+    return this.http.post<AuthResponse>(`${this.apiUrl}/api/auth/login`, {
+      username: username,
+      password: 'mock' // Backend will validate based on username
     }).pipe(
       tap(response => {
         this.storeToken(response.access_token);

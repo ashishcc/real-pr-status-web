@@ -14,78 +14,36 @@
       </div>
 
       <div class="login-form">
-        <!-- Step 1: Email input -->
-        <div *ngIf="showEmailInput" class="email-section">
-          <ion-item>
-            <ion-label position="stacked">Email Address</ion-label>
-            <ion-input 
-              type="email" 
-              [(ngModel)]="email" 
-              placeholder="Enter your email"
-              (keyup.enter)="checkEmailSSO()"
-              [disabled]="loading">
-            </ion-input>
-          </ion-item>
-          
-          <ion-button 
-            expand="block" 
-            (click)="checkEmailSSO()"
-            [disabled]="loading || !email"
-            class="continue-button">
-            <span *ngIf="!loading">Continue</span>
-            <span *ngIf="loading">Checking...</span>
-          </ion-button>
-
-          <!-- For local testing -->
-          <div *ngIf="!loading" class="test-section">
-            <div class="divider">
-              <span>OR</span>
-            </div>
-            
-            <ion-button 
-              expand="block" 
-              fill="outline"
-              (click)="signInWithMockAuth()"
-              *ngIf="true"
-              class="test-button">
-              <ion-icon name="bug-outline" slot="start"></ion-icon>
-              Test with Mock Auth (Dev Only)
-            </ion-button>
-          </div>
-        </div>
-
-        <!-- Step 3: Show Google Sign-in button after email check -->
-        <div *ngIf="!showEmailInput && ssoInfo" class="sso-section">
-          <div class="email-display">
-            <ion-text color="medium">
-              <p>Signing in as:</p>
-            </ion-text>
-            <h3>{{ email }}</h3>
-          </div>
-
-          <ion-button 
-            expand="block" 
-            (click)="signInWithGoogleForEmail()"
-            [disabled]="loading"
-            [class]="isLocalhost() ? 'test-button' : 'google-button'">
-            <ion-icon [name]="isLocalhost() ? 'bug-outline' : 'logo-google'" slot="start"></ion-icon>
-            <span *ngIf="!loading && !isLocalhost()">Sign in as {{ email }}</span>
-            <span *ngIf="!loading && isLocalhost()">Sign in as {{ email }} (Mock Auth)</span>
-            <span *ngIf="loading">Signing in...</span>
-          </ion-button>
-
-          <!-- Hidden div for Google Sign-In SDK to render button -->
-          <div id="googleSignInDiv" style="display: none;"></div>
-
-          <ion-button 
-            expand="block" 
-            fill="clear"
-            (click)="resetToEmailInput()"
-            [disabled]="loading"
-            size="small">
-            Use a different email
-          </ion-button>
-        </div>
+        <ion-item>
+          <ion-label position="stacked">Username</ion-label>
+          <ion-input 
+            type="text" 
+            [(ngModel)]="username" 
+            placeholder="Enter your username"
+            (keyup.enter)="login()"
+            [disabled]="loading">
+          </ion-input>
+        </ion-item>
+        
+        <ion-item>
+          <ion-label position="stacked">Password</ion-label>
+          <ion-input 
+            type="password" 
+            [(ngModel)]="password" 
+            placeholder="Enter your password"
+            (keyup.enter)="login()"
+            [disabled]="loading">
+          </ion-input>
+        </ion-item>
+        
+        <ion-button 
+          expand="block" 
+          (click)="login()"
+          [disabled]="loading || !username || !password"
+          class="login-button">
+          <span *ngIf="!loading">Sign In</span>
+          <span *ngIf="loading">Signing in...</span>
+        </ion-button>
       </div>
 
       <div class="login-footer">
